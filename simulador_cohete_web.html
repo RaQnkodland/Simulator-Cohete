@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071426">
+<title>Simulador de cohetes | Concordia Universal</title>
+<style>
+:root{color-scheme:dark;--bg:#071426;--panel:#0d1d33;--panel2:#132a46;--text:#edf4ff;--muted:#91a8c6;--blue:#5ba8ff;--yellow:#f4c95d;--line:#22364f;--green:#72e0a7;--red:#ff7187}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px "Segoe UI",Arial,sans-serif;min-height:100vh}
+button,input,select{font:inherit}button{border:0;border-radius:6px;padding:12px 16px;background:#172b45;color:var(--text);font-weight:700;cursor:pointer;transition:background .15s,transform .15s}button:hover{background:#223b5b;transform:translateY(-1px)}button.primary{background:#246bce}button.primary:hover{background:#347de0}button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.shell{width:min(1500px,100%);margin:auto;padding:25px clamp(16px,3vw,42px)}header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:22px}.brand{display:inline-block;background:#10263a;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.08em;padding:6px 11px;margin-bottom:10px}.eyebrow{color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.1em}h1{font-size:clamp(25px,3vw,34px);margin:0 0 5px}h2{font-size:20px;margin:0 0 8px}p{line-height:1.55}.subtitle,.muted{color:var(--muted)}.tag{background:var(--panel);color:var(--blue);padding:9px 14px;font-weight:700;font-size:12px;white-space:nowrap}
+.card{background:var(--panel);border-radius:8px;padding:clamp(18px,2.4vw,30px)}.home{display:grid;grid-template-columns:1fr minmax(280px,420px);gap:24px;min-height:500px;align-items:stretch}.home-copy{display:flex;flex-direction:column;justify-content:center}.hero-title{font-size:clamp(36px,5vw,56px);line-height:1.08;margin:12px 0}.destinations{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0 24px}.destinations span{background:#172b45;color:var(--blue);padding:7px 10px;font-size:11px;font-weight:800}.hero-art{width:100%;height:440px;background:#08172a;border:1px solid #1d3655;min-height:400px;border-radius:5px}
+.form-layout{display:grid;grid-template-columns:minmax(240px,.85fr) minmax(0,1.35fr);gap:20px}.steps{display:grid;gap:17px;margin:20px 0}.step{display:grid;grid-template-columns:45px 1fr;gap:12px}.step-num{background:#1a3454;color:var(--yellow);padding:10px;text-align:center;font-weight:800;height:max-content}.step p{margin:4px 0 0;color:var(--muted);font-size:13px}.key-help{background:#0b1422;color:var(--muted);padding:13px;font-size:13px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}.field{margin-bottom:13px;min-width:0}.field label{display:block;font-weight:700;font-size:13px;margin:0 0 6px}.field-help{display:block;color:var(--muted);font-size:11px;line-height:1.35;margin:-2px 0 7px}.control{display:flex;align-items:center;background:var(--panel2);border-radius:5px;min-width:0}.control input,.control select{width:100%;min-width:0;color:var(--text);background:transparent;border:0;outline:0;padding:11px}.control select option{background:var(--panel2)}.unit{padding:0 10px;color:var(--muted);font-size:12px;white-space:nowrap}.error{color:var(--red);min-height:22px;font-size:13px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1}
+.simulation{display:grid;grid-template-columns:minmax(0,1fr) 315px;gap:16px}.visuals{min-width:0;display:grid;gap:10px;grid-template-rows:minmax(350px,1fr) auto 150px}.canvas-wrap{position:relative;min-height:350px;background:#050b18;border:1px solid #1d3048;border-radius:5px;overflow:hidden}.canvas-wrap canvas{display:block;width:100%;height:100%;position:absolute;inset:0}.sliders{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:var(--panel);padding:10px 14px;border-radius:5px}.slider label{display:flex;justify-content:space-between;color:var(--muted);font-weight:700;font-size:11px}.slider input{width:100%;accent-color:var(--blue)}.chart{width:100%;height:150px;background:var(--panel);border:1px solid #1d3048;border-radius:5px}.telemetry h2{color:var(--blue);font-size:13px;letter-spacing:.1em}.status{background:#17314a;padding:9px 10px;font-size:12px;font-weight:800;color:var(--green);margin:12px 0}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px}.metric{background:var(--panel2);padding:9px}.metric small{display:block;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase}.metric strong{display:block;margin-top:5px;font-size:14px;overflow-wrap:anywhere}.prediction{color:var(--yellow);font-weight:700}.reference{color:var(--muted);font-size:13px;white-space:pre-line}.telemetry .actions{display:grid;grid-template-columns:1fr 1fr}.telemetry .actions button{font-size:12px;padding:10px 7px}.telemetry .wide{grid-column:1/-1}.footer-note{font-size:11px;color:var(--muted);margin:10px 0 0}.table-wrap{overflow:auto;background:var(--panel);padding:12px;border-radius:6px}table{border-collapse:collapse;width:100%;min-width:760px;text-align:left}th,td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:13px}th{background:#1a3554}tbody tr:nth-child(even){background:var(--panel2)}.history-note{color:var(--muted);margin:12px 0}.hidden{display:none!important}.notification{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#17314a;padding:11px 18px;border-radius:6px;z-index:5}
+@media(max-width:900px){.simulation{grid-template-columns:1fr}.visuals{grid-template-rows:minmax(340px,55vh) auto 150px}.form-layout{grid-template-columns:1fr 1.4fr}.telemetry .actions{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.home,.form-layout{grid-template-columns:1fr}.hero-art{height:340px;min-height:300px}.fields{grid-template-columns:1fr}.simulation{gap:12px}.visuals{grid-template-rows:minmax(300px,50vh) auto 155px}.sliders{grid-template-columns:1fr}.shell{padding:18px 13px}header{align-items:flex-start}.tag{font-size:10px}.telemetry .actions{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header>
+    <div><span class="brand">CONCORDIA UNIVERSAL</span><h1 id="page-title">Una misión te espera</h1><div class="subtitle" id="page-subtitle">Explora nuevos mundos y pon a prueba la velocidad de escape.</div></div>
+    <span class="tag" id="page-tag">CENTRO DE EXPLORACIÓN</span>
+  </header>
+  <section id="home" class="card home">
+    <div class="home-copy"><span class="eyebrow" style="color:var(--yellow)">PROGRAMA DE EXPLORACIÓN ESPACIAL</span><div class="hero-title">Más allá del cielo,<br>un cohete a la vez.</div><p class="muted">Elige un planeta, prepara el lanzamiento y descubre si tu cohete puede vencer su gravedad.</p><div class="destinations"><span>TIERRA</span><span>LUNA</span><span>MARTE</span><span>JÚPITER</span></div><div><button class="primary" id="start-button">LANZAR COHETE &nbsp; ›</button></div><p class="footer-note" id="audio-home-status">Efectos de sonido disponibles en este navegador</p></div>
+    <canvas id="cover" class="hero-art" aria-label="Ilustración de un cohete espacial"></canvas>
+  </section>
+  <section id="config" class="form-layout hidden">
+    <aside class="card"><h2>Antes de empezar</h2><div style="width:46px;height:3px;background:var(--yellow);margin:13px 0 20px"></div><div class="steps"><div class="step"><b class="step-num">01</b><div><b>Elige destino</b><p>Selecciona un planeta o define uno propio.</p></div></div><div class="step"><b class="step-num">02</b><div><b>Configura el cohete</b><p>Define combustible, empuje, consumo y ángulo.</p></div></div><div class="step"><b class="step-num">03</b><div><b>Observa el vuelo</b><p>Sigue las gráficas, la trayectoria y la telemetría.</p></div></div></div><div class="eyebrow">CONTROLES DURANTE LA SIMULACIÓN</div><p class="key-help">ESPACIO Pausar / reanudar &nbsp; R Reiniciar &nbsp; Q Salir</p></aside>
+    <section class="card"><div class="eyebrow">DATOS DE LA MISIÓN</div><h2 style="margin:5px 0 18px">Parámetros de lanzamiento</h2>
+      <div class="field"><label for="planet">Planeta</label><small class="field-help">El destino cambia la gravedad, la velocidad de escape y la atmósfera.</small><div class="control"><select id="planet"><option>Tierra</option><option>Luna</option><option>Marte</option><option>Jupiter</option><option>Personalizado</option></select></div></div>
+      <div id="custom-fields" class="fields hidden">
+        <div class="field"><label for="planet-mass">Masa del planeta</label><small class="field-help">Más masa implica mayor atracción gravitatoria.</small><div class="control"><input id="planet-mass" value="5.972e24" inputmode="decimal"><span class="unit">kg</span></div></div>
+        <div class="field"><label for="gravity">Gravedad superficial</label><small class="field-help">Gravedad en la superficie; junto con la masa determina el radio del planeta.</small><div class="control"><input id="gravity" value="9.81" inputmode="decimal"><span class="unit">m/s²</span></div></div>
+        <div class="field"><label for="rotation">Velocidad angular</label><small class="field-help">La rotación aporta velocidad inicial al cohete y mueve la atmósfera.</small><div class="control"><input id="rotation" value="7.2921159e-5" inputmode="decimal"><span class="unit">rad/s</span></div></div>
+        <div class="field"><label for="density">Densidad atmosférica</label><small class="field-help">Una atmósfera más densa produce más resistencia al avance.</small><div class="control"><input id="density" value="1.225" inputmode="decimal"><span class="unit">kg/m³</span></div></div>
+        <div class="field"><label for="scale-height">Altura de escala</label><small class="field-help">Indica qué tan rápido disminuye la densidad al ganar altura.</small><div class="control"><input id="scale-height" value="8500" inputmode="decimal"><span class="unit">m</span></div></div>
+      </div>
+      <div class="fields">
+        <div class="field"><label for="dry-mass">Masa seca</label><small class="field-help">Masa del cohete sin combustible; más masa reduce la aceleración.</small><div class="control"><input id="dry-mass" value="50000" inputmode="decimal"><span class="unit">kg</span></div></div>
+        <div class="field"><label for="fuel">Combustible</label><small class="field-help">Cantidad disponible; determina cuánto puede durar la propulsión.</small><div class="control"><input id="fuel" value="500000" inputmode="decimal"><span class="unit">kg</span></div></div>
+        <div class="field"><label for="thrust">Empuje del motor</label><small class="field-help">Fuerza del motor; más empuje aumenta la aceleración.</small><div class="control"><input id="thrust" value="8500000" inputmode="decimal"><span class="unit">N</span></div></div>
+        <div class="field"><label for="consumption">Consumo</label><small class="field-help">Combustible usado por segundo; más consumo agota antes la reserva.</small><div class="control"><input id="consumption" value="350" inputmode="decimal"><span class="unit">kg/s</span></div></div>
+        <div class="field"><label for="angle">Ángulo desde vertical</label><small class="field-help">Dirección del empuje: 0° es vertical; los ángulos positivos inclinan a la derecha.</small><div class="control"><input id="angle" value="0" inputmode="decimal"><span class="unit">grados</span></div></div>
+        <div class="field"><label for="drag">Coeficiente de arrastre</label><small class="field-help">Resistencia aerodinámica; un valor mayor frena más al cohete.</small><div class="control"><input id="drag" value="0.5" inputmode="decimal"><span class="unit">Cd</span></div></div>
+        <div class="field"><label for="area">Área frontal</label><small class="field-help">Superficie expuesta al aire; más área aumenta el arrastre.</small><div class="control"><input id="area" value="10" inputmode="decimal"><span class="unit">m²</span></div></div>
+      </div>
+      <p class="footer-note">El combustible se consume hasta agotarse; el empuje sigue el ángulo seleccionado.</p><div class="error" id="config-error" role="alert"></div>
+      <div class="actions"><button class="primary" id="launch-button">INICIAR SIMULACIÓN</button><button id="back-home">VOLVER AL INICIO</button><button id="open-history">HISTORIAL Y COMPARACIÓN</button></div>
+    </section>
+  </section>
+  <section id="flight" class="simulation hidden">
+    <div class="visuals"><div class="canvas-wrap"><canvas id="flight-canvas" aria-label="Animación de la trayectoria del cohete"></canvas></div>
+      <div class="sliders"><div class="slider"><label for="speed">VELOCIDAD DE SIMULACIÓN <span id="speed-value">3.0×</span></label><input id="speed" type="range" min="3" max="5" step=".1" value="3"></div><div class="slider"><label for="zoom">ZOOM DE CÁMARA <span id="zoom-value">1.0×</span></label><input id="zoom" type="range" min=".6" max="2" step=".1" value="1"></div></div>
+      <canvas id="chart" class="chart" aria-label="Gráficas de altitud y velocidad"></canvas>
+    </div>
+    <aside class="card telemetry"><h2>TELEMETRÍA</h2><div class="status" id="flight-status">EN VUELO</div><div class="metrics">
+      <div class="metric"><small>Tiempo simulado</small><strong id="metric-time">0.0 h</strong></div><div class="metric"><small>Altura actual</small><strong id="metric-height">0 km</strong></div><div class="metric"><small>Altura máxima</small><strong id="metric-max">0 km</strong></div><div class="metric"><small>Velocidad actual</small><strong id="metric-velocity">0.00 km/s</strong></div><div class="metric"><small>Combustible restante</small><strong id="metric-fuel">0 kg</strong></div></div>
+      <p class="eyebrow" style="margin:15px 0 4px;color:var(--muted)">PREDICCIÓN INICIAL / RESULTADO</p><p class="prediction" id="result">Motor activo; trayectoria determinada durante el vuelo.</p><div class="reference" id="reference"></div><p class="footer-note" id="audio-flight-status">Audio activo</p><p class="footer-note">Atajos: ESPACIO pausa, R reinicia, Q vuelve a configuración.</p>
+      <div class="actions"><button class="primary" id="pause-button">PAUSAR</button><button id="reset-button">REINICIAR</button><button id="mute-button" class="wide">SILENCIAR AUDIO</button><button id="configure-button" class="primary wide">VOLVER A CONFIGURAR</button></div>
+    </aside>
+  </section>
+  <section id="history" class="hidden"><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Destino</th><th>Altura máxima (km)</th><th>Tiempo (s)</th><th>Velocidad final (km/s)</th><th>Resultado</th></tr></thead><tbody id="history-body"></tbody></table></div><p class="history-note" id="history-note"></p><div class="actions"><button class="primary" id="export-button">EXPORTAR CSV</button><button id="history-back">VOLVER A LA MISIÓN</button></div></section>
+</main>
+<div id="notification" class="notification hidden" role="status"></div>
+<script>
+"use strict";
+(() => {
+  const G=6.67430e-11, MAX_STEPS=20000, MAX_TIME=7*24*60*60, MAX_WALL_TIME=9, SIMULATION_RATE=75;
+  const planets={
+    Tierra:{name:"Tierra",mass:5.972e24,gravity:9.81,rotation:7.2921159e-5,density:1.225,scale:8500},
+    Luna:{name:"Luna",mass:7.342e22,gravity:1.62,rotation:2.6617e-6,density:0,scale:1},
+    Marte:{name:"Marte",mass:6.4171e23,gravity:3.71,rotation:7.088e-5,density:.020,scale:11100},
+    Jupiter:{name:"Jupiter",mass:1.898e27,gravity:24.79,rotation:1.7585e-4,density:.16,scale:27000}
+  };
+  const $=id=>document.getElementById(id);
+  const pages=["home","config","flight","history"];
+  const state={page:"home",flight:null,raf:0,lastFrameTime:0,paused:false,finished:false,muted:false,audio:null,motorNodes:null,motorTimer:0,lastHover:0,notificationTimer:0};
+  function showPage(page){
+    state.page=page; pages.forEach(id=>$(id).classList.toggle("hidden",id!==page));
+    const meta={
+      home:["Una misión te espera","Explora nuevos mundos y pon a prueba la velocidad de escape.","CENTRO DE EXPLORACIÓN"],
+      config:["Prepara el lanzamiento","Configura el planeta y las condiciones del despegue.",""],
+      flight:["Simulación en curso","Observa la trayectoria y consulta la telemetría del lanzamiento.",state.flight?state.flight.planet.name.toUpperCase():""],
+      history:["Historial de misiones","Compara resultados guardados entre ejecuciones y expórtalos a CSV.",""]
+    }[page];
+    $("page-title").textContent=meta[0]; $("page-subtitle").textContent=meta[1]; $("page-tag").textContent=meta[2]; $("page-tag").classList.toggle("hidden",!meta[2]);
+    if(page==="home")drawCover();
+    if(page==="flight"){resizeCanvases();renderFlight();drawChart();}
+  }
+  function number(id,label,{zero=false}={}){
+    const raw=$(id).value.trim().replace(",","."); const value=Number(raw);
+    if(!raw||!Number.isFinite(value)||value<0||(!zero&&value===0))throw Error(`${label} debe ser finito y ${zero?"mayor o igual que cero":"mayor que cero"}.`);
+    return value;
+  }
+  function readPlanet(){
+    const selected=$("planet").value;
+    if(selected!=="Personalizado")return {...planets[selected]};
+    return {name:"Personalizado",mass:number("planet-mass","La masa del planeta"),gravity:number("gravity","La gravedad"),rotation:number("rotation","La velocidad angular",{zero:true}),density:number("density","La densidad atmosférica",{zero:true}),scale:number("scale-height","La altura de escala atmosférica")};
+  }
+  function parameters(p){
+    if(!Number.isFinite(p.density)||p.density<0)throw Error("La densidad atmosférica debe ser finita y no negativa.");
+    if(!Number.isFinite(p.scale)||p.scale<=0)throw Error("La altura de escala atmosférica debe ser positiva.");
+    const mu=G*p.mass,radius=Math.sqrt(mu/p.gravity);
+    if(!Number.isFinite(mu)||mu<=0||!Number.isFinite(radius)||radius<=0)throw Error("Los parámetros del planeta producen valores fuera de rango.");
+    const escape=Math.sqrt(2*mu/radius),rotation=p.rotation*radius;
+    if(!Number.isFinite(escape)||!Number.isFinite(rotation))throw Error("Los parámetros del planeta producen velocidades fuera de rango.");
+    let dt=Math.min(5,2*Math.PI*Math.sqrt(radius**3/mu)/1500);
+    if(!Number.isFinite(dt)||dt<=0)throw Error("No se pudo calcular un paso de tiempo estable.");
+    return {mu,radius,escape,rotation,dt};
+  }
+  function readRocket(){
+    const r={dry:number("dry-mass","La masa seca"),fuel:number("fuel","El combustible"),thrust:number("thrust","El empuje"),consumption:number("consumption","El consumo"),angle:number("angle","El ángulo",{zero:true}),drag:number("drag","El coeficiente de arrastre",{zero:true}),area:number("area","El área frontal")};
+    if(r.angle < -90||r.angle>90)throw Error("El ángulo de lanzamiento debe estar entre -90 y 90 grados.");
+    return r;
+  }
+  function densityAt(altitude,p){if(p.density===0)return 0;return p.density*Math.exp(Math.max(-745,-Math.max(0,altitude)/p.scale));}
+  function acceleration(x,y,vx,vy,mass,thrustFraction,p,r,mu,radius){
+    const rad=Math.hypot(x,y); if(rad===0||mass<=0)throw Error("La posición y la masa del cohete deben ser positivas.");
+    const f=-mu/(rad**3); let ax=f*x,ay=f*y;
+    const dens=densityAt(Math.max(0,rad-radius),p),airX=p.rotation*y,airY=-p.rotation*x;
+    const relX=vx-airX,relY=vy-airY,relative=Math.hypot(relX,relY);
+    if(dens&&relative){const dragFactor=-.5*dens*r.drag*r.area*relative/mass;ax+=dragFactor*relX;ay+=dragFactor*relY;}
+    const angle=r.angle*Math.PI/180,thrustAccel=thrustFraction*r.thrust/mass;
+    return [ax+thrustAccel*Math.sin(angle),ay+thrustAccel*Math.cos(angle)];
+  }
+  function verlet(s,p,r,mu,radius,dt){
+    const [x,y,vx,vy,fuel]=s;
+    if(!s.every(Number.isFinite)||!Number.isFinite(mu)||!Number.isFinite(radius)||!Number.isFinite(dt))throw Error("El estado de simulación debe ser finito.");
+    if(fuel<0||dt<=0||mu<=0||radius<=0)throw Error("El combustible, paso de tiempo y planeta no son válidos.");
+    const burned=Math.min(fuel,r.consumption*dt),newFuel=Math.max(0,fuel-burned),mass=r.dry+(fuel+newFuel)/2;
+    const thrustFraction=burned?burned/(r.consumption*dt):0;
+    const [ax,ay]=acceleration(x,y,vx,vy,mass,thrustFraction,p,r,mu,radius);
+    const nx=x+vx*dt+.5*ax*dt*dt,ny=y+vy*dt+.5*ay*dt*dt;
+    if(Math.hypot(nx,ny)===0)throw Error("El paso de simulación alcanzó el centro del planeta.");
+    const [nax,nay]=acceleration(nx,ny,vx+ax*dt,vy+ay*dt,mass,thrustFraction,p,r,mu,radius);
+    const next=[nx,ny,vx+.5*(ax+nax)*dt,vy+.5*(ay+nay)*dt,newFuel];
+    if(!next.every(Number.isFinite))throw Error("El paso de simulación excedió el rango numérico.");
+    return next;
+  }
+  function physicsStep(s,p,r,mu,radius,dt){
+    if(!Number.isFinite(dt)||dt<=0)throw Error("El paso de tiempo debe ser positivo y finito.");
+    let remaining=dt,substeps=0;
+    while(remaining>Math.max(1e-12,dt*1e-12)){
+      const [x,y,vx,vy,fuel]=s,rad=Math.hypot(x,y),mass=r.dry+fuel;
+      if(rad<=0||mass<=0)throw Error("La posición y la masa del cohete deben ser positivas.");
+      const rel=Math.hypot(vx-p.rotation*y,vy+p.rotation*x),dens=densityAt(rad-radius,p);
+      const dragRate=.5*dens*r.drag*r.area*rel/mass;
+      let step=Math.min(remaining,dragRate>0?.2/dragRate:remaining);
+      const [ax,ay]=acceleration(x,y,vx,vy,mass,fuel>0?1:0,p,r,mu,radius),accel=Math.hypot(ax,ay);
+      if(accel>0)step=Math.min(step,.2*Math.sqrt(rad/accel));
+      if(step<=1e-12)throw Error("El paso adaptativo de simulación es demasiado pequeño.");
+      s=verlet(s,p,r,mu,radius,step); remaining-=step;
+      if(++substeps>5000)throw Error("Se excedió el límite de subpasos adaptativos.");
+    }
+    return s;
+  }
+  function startFlight(){
+    $("config-error").textContent="";
+    try{
+      const planet=readPlanet(),rocket=readRocket(),params=parameters(planet);
+      const kinetic=.5*(rocket.dry+rocket.fuel)*params.rotation**2;
+      if(!Number.isFinite(kinetic))throw Error("Los datos exceden el rango numérico.");
+      state.flight={planet,rocket,...params,x:0,y:params.radius,vx:params.rotation,vy:0,fuel:rocket.fuel,time:0,steps:0,accumulator:0,activeWallTime:0,maxHeight:0,trajectory:[],samples:[],visualLimit:5,missionSaved:false,result:"Motor activo; trayectoria determinada durante el vuelo."};
+      state.paused=false;state.finished=false;
+      state.lastFrameTime=0;$("speed").value="3";$("zoom").value="1";$("speed-value").textContent="3.0×";$("zoom-value").textContent="1.0×";
+      $("pause-button").textContent="PAUSAR";$("pause-button").disabled=false;
+      $("flight-status").textContent="EN VUELO";$("flight-status").style.color="var(--green)";
+      $("mute-button").textContent=state.muted?"ACTIVAR AUDIO":"SILENCIAR AUDIO";
+      $("reference").textContent=`Escape de referencia: ${(params.escape/1000).toFixed(2)} km/s\nEnergía cinética inicial: ${kinetic.toExponential(2)} J\nCombustión estimada: ${(rocket.fuel/rocket.consumption/60).toFixed(1)} min`;
+      showPage("flight");updateTelemetry();playSound("launch");state.raf=requestAnimationFrame(tick);
+    }catch(error){$("config-error").textContent=error.message;}
+  }
+  function resizeCanvases(){
+    for(const canvas of [$("cover"),$("flight-canvas"),$("chart")]){
+      const rect=canvas.getBoundingClientRect(),dpr=Math.max(1,window.devicePixelRatio||1);
+      const w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+      if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+    }
+  }
+  function context(id){const c=$(id),ctx=c.getContext("2d");ctx.setTransform(c.width/(c.clientWidth||1),0,0,c.height/(c.clientHeight||1),0,0);return {ctx,w:c.clientWidth,h:c.clientHeight};}
+  function seeded(seed){let n=seed>>>0;return()=>{n=(n*1664525+1013904223)>>>0;return n/4294967296;};}
+  function drawRocket(ctx,x,y,angle=0,scale=1){
+    ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.scale(scale,scale);
+    const flame=ctx.createLinearGradient(0,9,0,27);flame.addColorStop(0,"#fff4a8");flame.addColorStop(.38,"#ffb34f");flame.addColorStop(1,"rgba(255,91,65,0)");
+    ctx.shadowColor="#ff9b4a";ctx.shadowBlur=8;
+    ctx.fillStyle=flame;ctx.beginPath();ctx.moveTo(-3.2,8);ctx.quadraticCurveTo(-3,17,0,25);ctx.quadraticCurveTo(3,17,3.2,8);ctx.closePath();ctx.fill();
+    ctx.shadowBlur=0;ctx.fillStyle="#e85f56";ctx.strokeStyle="#ffb07a";ctx.lineWidth=.8;
+    ctx.beginPath();ctx.moveTo(-5,2);ctx.lineTo(-11,12);ctx.lineTo(-4,9);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(5,2);ctx.lineTo(11,12);ctx.lineTo(4,9);ctx.closePath();ctx.fill();ctx.stroke();
+    const hull=ctx.createLinearGradient(-7,0,7,0);hull.addColorStop(0,"#aebfce");hull.addColorStop(.38,"#f7fbff");hull.addColorStop(1,"#b8c9d8");
+    ctx.fillStyle=hull;ctx.strokeStyle="#ffffff";ctx.lineWidth=.9;
+    ctx.beginPath();ctx.moveTo(0,-20);ctx.quadraticCurveTo(8,-11,7,2);ctx.lineTo(6,9);ctx.lineTo(-6,9);ctx.lineTo(-7,2);ctx.quadraticCurveTo(-8,-11,0,-20);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle="#f2765f";ctx.beginPath();ctx.moveTo(-5.4,6);ctx.lineTo(-4.2,10);ctx.lineTo(4.2,10);ctx.lineTo(5.4,6);ctx.closePath();ctx.fill();
+    ctx.fillStyle="#4a91b4";ctx.fillRect(-6.3,4,12.6,1.8);
+    const glass=ctx.createRadialGradient(-1,-6,.4,0,-5,4.4);glass.addColorStop(0,"#baf7ff");glass.addColorStop(.45,"#52d7f2");glass.addColorStop(1,"#237ba6");
+    ctx.fillStyle=glass;ctx.strokeStyle="#f2fbff";ctx.lineWidth=.8;ctx.beginPath();ctx.arc(0,-5,3.1,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.restore();
+  }
+  function drawCover(){
+    if(!$("cover").clientWidth)return;resizeCanvases();const {ctx,w,h}=context("cover");ctx.fillStyle="#08172a";ctx.fillRect(0,0,w,h);
+    const rand=seeded(17);for(let i=0;i<110;i++){ctx.fillStyle=["#526985","#8195ad","#d0d9e6"][Math.floor(rand()*3)];ctx.beginPath();ctx.arc(rand()*w,rand()*h,rand()*1.3+.5,0,Math.PI*2);ctx.fill();}
+    const x=w*.55,y=h*.58;ctx.strokeStyle="#203a58";ctx.setLineDash([3,7]);ctx.beginPath();ctx.arc(x,y,Math.min(w,h)*.37,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    const g=ctx.createRadialGradient(x-18,y-20,2,x,y,65);g.addColorStop(0,"#428fc0");g.addColorStop(1,"#17699b");ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,Math.min(60,h*.16),0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#46a879";for(const [dx,dy,rx,ry] of [[-24,8,16,10],[13,13,16,9],[9,-19,10,7]]){ctx.beginPath();ctx.ellipse(x+dx,y+dy,rx,ry,-.3,0,Math.PI*2);ctx.fill();}
+    drawRocket(ctx,x+96,y-125,0,3.1);ctx.fillStyle="#7891ad";ctx.font="bold 11px Segoe UI";ctx.fillText("ÓRBITA DE EXPLORACIÓN",18,24);
+  }
+  function renderFlight(){
+    if(!state.flight||state.page!=="flight")return;
+    const {ctx,w,h}=context("flight-canvas"),f=state.flight,cx=w/2,cy=h/2;
+    ctx.fillStyle="#050b18";ctx.fillRect(0,0,w,h);
+    const rand=seeded(17);for(let i=0;i<110;i++){ctx.fillStyle=["#526985","#8195ad","#d0d9e6"][Math.floor(rand()*3)];ctx.fillRect(8+rand()*(w-16),8+rand()*(h-16),1.5,1.5);}
+    const zoom=Number($("zoom").value),planetPx=Math.min(50,Math.max(33,Math.min(w,h)*.13))*zoom,scale=planetPx/f.radius;
+    const planetX=cx-f.x*scale,planetY=cy+f.y*scale,visualPx=Math.min(planetPx*5,Math.max(planetPx,Math.min(w,h)/2-15));
+    const screenPoint=(x,y)=>[cx+(x-f.x)*scale,cy-(y-f.y)*scale];
+    ctx.strokeStyle="#203a58";ctx.setLineDash([3,7]);ctx.lineWidth=1;ctx.beginPath();ctx.arc(planetX,planetY,visualPx,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle="#38bdf8";ctx.lineWidth=2;ctx.beginPath();ctx.arc(planetX,planetY,planetPx+6*zoom,0,Math.PI*2);ctx.stroke();
+    const colors={Tierra:["#17699b","#46a879"],Luna:["#838b9a","#b9c0cc"],Marte:["#a94738","#dc7957"],Jupiter:["#b56d42","#e0ae70"],Personalizado:["#4a5eaa","#8497e8"]},[base,detail]=colors[f.planet.name]||colors.Personalizado;
+    ctx.fillStyle=base;ctx.beginPath();ctx.arc(planetX,planetY,planetPx,0,Math.PI*2);ctx.fill();
+    ctx.save();ctx.beginPath();ctx.arc(planetX,planetY,planetPx,0,Math.PI*2);ctx.clip();ctx.fillStyle=detail;
+    if(f.planet.name==="Tierra"){for(const [dx,dy,rx,ry] of [[-.48,.22,.33,.2],[.35,.32,.3,.18],[.25,-.4,.22,.16]]){ctx.beginPath();ctx.ellipse(planetX+dx*planetPx,planetY+dy*planetPx,rx*planetPx,ry*planetPx,-.4,0,Math.PI*2);ctx.fill();}}
+    else if(f.planet.name==="Jupiter"){for(let y=-.6;y<=.6;y+=.28){ctx.fillRect(planetX-planetPx,planetY+y*planetPx,planetPx*2,4*zoom);}}
+    else if(f.planet.name==="Luna"){for(const [dx,dy,r] of [[-.38,.3,.13],[.36,-.12,.18],[-.1,-.56,.09]]){ctx.strokeStyle=detail;ctx.lineWidth=2*zoom;ctx.beginPath();ctx.arc(planetX+dx*planetPx,planetY+dy*planetPx,r*planetPx,0,Math.PI*2);ctx.stroke();}}
+    ctx.restore();ctx.fillStyle="#d9f3ff";ctx.beginPath();ctx.arc(planetX-planetPx*.28,planetY-planetPx*.46,planetPx*.12,0,Math.PI*2);ctx.fill();
+    const trajectory=f.trajectory,interval=Math.max(1,Math.floor(trajectory.length/1800));ctx.strokeStyle="#f3a55b";ctx.lineWidth=2;ctx.beginPath();
+    for(let i=0;i<trajectory.length;i+=interval){const [px,py]=screenPoint(trajectory[i][0],trajectory[i][1]);if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}
+    if(trajectory.length){const [px,py]=screenPoint(...trajectory[trajectory.length-1]);ctx.lineTo(px,py);}ctx.stroke();
+    if(!state.finished)drawRocket(ctx,cx,cy,f.rocket.angle*Math.PI/180,1.15*zoom);
+    ctx.fillStyle="#7891ad";ctx.font="bold 10px Segoe UI";ctx.fillText("CAMPO GRAVITATORIO",18,20);ctx.textAlign="right";ctx.fillText("ZONA DE SEGUIMIENTO",w-18,h-16);ctx.textAlign="left";
+    if(state.finished){const success=f.result.toLowerCase().includes("escap")||f.result.toLowerCase().includes("cumplida"),label=success?"ESCAPE CONFIRMADO - MISIÓN CUMPLIDA":f.result.toUpperCase();
+      ctx.fillStyle=success?"#10263a":"#301b24";ctx.fillRect(cx-Math.min(w*.42,220),h-48,Math.min(w*.84,440),32);ctx.strokeStyle=success?"#5ba8ff":"#ff744f";ctx.strokeRect(cx-Math.min(w*.42,220),h-48,Math.min(w*.84,440),32);ctx.fillStyle=success?"#f4c95d":"#ffbb55";ctx.font="bold 11px Segoe UI";ctx.textAlign="center";ctx.fillText(label,cx,h-27);ctx.textAlign="left";
+      if(f.effect){const colors=success?["#f4c95d","#5ba8ff","#fff","#ff9b72","#72e0a7"]:["#fff0a8","#ffbb55","#ff744f","#e34f42"];for(let i=0;i<26;i++){const a=i*2.4+f.steps,dist=(performance.now()%1200)/1200*visualPx*.8;ctx.fillStyle=colors[i%colors.length];ctx.beginPath();ctx.arc(cx+Math.cos(a)*dist,cy+Math.sin(a)*dist,Math.max(1,3-dist/visualPx*2),0,Math.PI*2);ctx.fill();}}
+    }
+  }
+  function drawChart(){
+    if(!state.flight||state.page!=="flight")return;const {ctx,w,h}=context("chart"),samples=state.flight.samples;ctx.clearRect(0,0,w,h);ctx.fillStyle="#0d1d33";ctx.fillRect(0,0,w,h);
+    const areas=[{top:12,bottom:h/2-8,index:1,color:"#f3a55b",title:"ALTITUD",unit:"km"},{top:h/2+6,bottom:h-23,index:2,color:"#5ba8ff",title:"VELOCIDAD",unit:"km/s"}],left=98,right=w-15;
+    for(const a of areas){ctx.fillStyle="#91a8c6";ctx.font="bold 10px Segoe UI";ctx.fillText(a.title,12,(a.top+a.bottom)/2+4);let max=Math.max(1,...samples.map(s=>s[a.index]));ctx.strokeStyle="#22364f";ctx.setLineDash([2,4]);for(let j=0;j<3;j++){const y=a.top+(a.bottom-a.top)*j/2;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();}ctx.setLineDash([]);ctx.fillStyle="#91a8c6";ctx.font="9px Segoe UI";ctx.textAlign="right";ctx.fillText(`${max.toFixed(1)} ${a.unit}`,right,a.top+10);ctx.textAlign="left";
+      if(samples.length>1){ctx.strokeStyle=a.color;ctx.lineWidth=2;ctx.beginPath();samples.forEach((s,i)=>{const x=left+(right-left)*i/(samples.length-1),y=a.bottom-(a.bottom-a.top)*s[a.index]/max;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();}}
+    ctx.fillStyle="#91a8c6";ctx.font="9px Segoe UI";ctx.fillText(`Tiempo simulado: ${(state.flight.time/3600).toFixed(1)} h`,left,h-7);
+  }
+  function updateTelemetry(){
+    const f=state.flight;if(!f)return;const height=Math.max(0,Math.hypot(f.x,f.y)-f.radius),velocity=Math.hypot(f.vx,f.vy);
+    $("metric-time").textContent=(f.time/3600).toFixed(1)+" h";$("metric-height").textContent=Math.round(height/1000).toLocaleString("es-ES")+" km";$("metric-max").textContent=Math.round(f.maxHeight/1000).toLocaleString("es-ES")+" km";$("metric-velocity").textContent=(velocity/1000).toFixed(2)+" km/s";$("metric-fuel").textContent=Math.round(f.fuel).toLocaleString("es-ES")+" kg";
+    f.samples.push([f.time,height/1000,velocity/1000]);if(f.samples.length>600)f.samples.shift();drawChart();
+  }
+  function missionResult(){
+    const f=state.flight;f.finished=true;state.finished=true;cancelAnimationFrame(state.raf);
+    $("flight-status").textContent="SIMULACIÓN FINALIZADA";$("flight-status").style.color=f.color||"var(--red)";$("result").textContent=f.result;$("pause-button").disabled=true;
+    updateTelemetry();saveMission();stopMotor();if(f.effect)playSound(f.effect);renderFlight();
+  }
+  function finish(message,color,effect=""){const f=state.flight;if(!f||state.finished)return;f.result=message;f.color=color;f.effect=effect;missionResult();}
+  function tick(timestamp){
+    if(state.page!=="flight"||state.paused||state.finished)return;
+    const f=state.flight;
+    if(!state.lastFrameTime)state.lastFrameTime=timestamp;
+    const rawElapsed=Math.max(0,(timestamp-state.lastFrameTime)/1000);
+    state.lastFrameTime=timestamp;
+    f.activeWallTime+=rawElapsed;
+    if(f.activeWallTime>=MAX_WALL_TIME){
+      const radius=Math.hypot(f.x,f.y),energy=.5*(f.vx*f.vx+f.vy*f.vy)-f.mu/radius;
+      if(energy>=0)finish("Escape previsto por energía; se alcanzó el límite de 10 segundos.","var(--green)");
+      else finish("Se alcanzó el límite de 10 segundos; trayectoria ligada.","var(--yellow)");
+      return;
+    }
+    const elapsed=Math.min(1,rawElapsed);
+    f.accumulator+=elapsed*SIMULATION_RATE*Number($("speed").value);
+    const count=Math.min(100,Math.floor(f.accumulator/f.dt));
+    f.accumulator-=count*f.dt;
+    if(!count){state.raf=requestAnimationFrame(tick);return;}
+    for(let i=0;i<count;i++){
+      try{[f.x,f.y,f.vx,f.vy,f.fuel]=physicsStep([f.x,f.y,f.vx,f.vy,f.fuel],f.planet,f.rocket,f.mu,f.radius,f.dt);}
+      catch(error){finish("Simulación detenida: "+error.message,"var(--red)");return;}
+      f.steps++;f.time+=f.dt;f.trajectory.push([f.x,f.y]);const rad=Math.hypot(f.x,f.y),height=rad-f.radius;f.maxHeight=Math.max(f.maxHeight,height);
+      if(rad<=f.radius){finish("Impacto contra el planeta.","var(--red)","explosion");return;}
+      if(rad>=5*f.radius){const energy=.5*(f.vx*f.vx+f.vy*f.vy)-f.mu/rad;if(energy>=0)finish("El cohete escapó del planeta.","var(--green)","celebration");else finish("Trayectoria ligada; salió del área visual.","var(--yellow)");return;}
+      if(f.steps>=MAX_STEPS||f.time>=MAX_TIME){const energy=.5*(f.vx*f.vx+f.vy*f.vy)-f.mu/rad;if(energy>=0)finish("Escape previsto por energía; se alcanzó el límite.","var(--green)");else finish("Trayectoria ligada; se alcanzó el límite.","var(--yellow)");return;}
+    }
+    updateTelemetry();renderFlight();state.raf=requestAnimationFrame(tick);
+  }
+  function pauseToggle(){
+    if(state.finished||!state.flight)return;state.paused=!state.paused;
+    $("pause-button").textContent=state.paused?"REANUDAR":"PAUSAR";$("flight-status").textContent=state.paused?"PAUSADO":"EN VUELO";$("flight-status").style.color=state.paused?"var(--yellow)":"var(--green)";
+    state.lastFrameTime=0;
+    if(state.paused){cancelAnimationFrame(state.raf);stopMotor();}else{playSound("motor");state.raf=requestAnimationFrame(tick);}
+  }
+  function resetFlight(){
+    if(!state.flight)return;const f=state.flight;cancelAnimationFrame(state.raf);state.paused=false;state.finished=false;
+    f.x=0;f.y=f.radius;f.vx=f.rotation;f.vy=0;f.fuel=f.rocket.fuel;f.time=0;f.steps=0;f.accumulator=0;f.activeWallTime=0;f.maxHeight=0;f.samples=[];f.trajectory=[];f.missionSaved=false;f.result="Motor activo; trayectoria determinada durante el vuelo.";f.effect="";state.lastFrameTime=0;
+    $("flight-status").textContent="EN VUELO";$("flight-status").style.color="var(--green)";$("result").textContent=f.result;$("pause-button").disabled=false;$("pause-button").textContent="PAUSAR";updateTelemetry();renderFlight();playSound("launch");state.raf=requestAnimationFrame(tick);
+  }
+  function getHistory(){try{const data=JSON.parse(localStorage.getItem("cohete_misiones")||"[]");return Array.isArray(data)?data:[];}catch(error){throw Error("No se pudo leer el historial guardado en este navegador: "+error.message);}}
+  function saveMission(){
+    const f=state.flight;if(f.missionSaved)return;f.missionSaved=true;
+    try{const rows=getHistory();rows.push({fecha:new Date().toISOString(),planeta:f.planet.name,masa_seca_kg:f.rocket.dry,combustible_inicial_kg:f.rocket.fuel,empuje_n:f.rocket.thrust,consumo_kg_s:f.rocket.consumption,angulo_grados:f.rocket.angle,arrastre_cd:f.rocket.drag,area_m2:f.rocket.area,altura_maxima_km:f.maxHeight/1000,tiempo_s:f.time,velocidad_final_km_s:Math.hypot(f.vx,f.vy)/1000,combustible_restante_kg:f.fuel,resultado:f.result});localStorage.setItem("cohete_misiones",JSON.stringify(rows));}
+    catch(error){notify("La misión terminó, pero no se pudo guardar el historial. "+error.message);}
+  }
+  function notify(message){const n=$("notification");n.textContent=message;n.classList.remove("hidden");clearTimeout(state.notificationTimer);state.notificationTimer=setTimeout(()=>n.classList.add("hidden"),4500);}
+  function renderHistory(){
+    let rows;try{rows=getHistory();}catch(error){rows=[];$("history-note").textContent=error.message;}
+    const body=$("history-body");body.replaceChildren();
+    [...rows].reverse().forEach(row=>{const tr=document.createElement("tr");const values=[row.fecha||"",row.planeta||"",Number(row.altura_maxima_km||0).toLocaleString("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2}),Number(row.tiempo_s||0).toLocaleString("es-ES",{maximumFractionDigits:1}),Number(row.velocidad_final_km_s||0).toFixed(3),row.resultado||""];values.forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td);});body.appendChild(tr);});
+    if(rows.length)$("history-note").textContent=`${rows.length} misión${rows.length===1?"":"es"} guardada${rows.length===1?"":"s"} en este navegador.`;
+    else if(!$("history-note").textContent.includes("No se pudo"))$("history-note").textContent="Aún no hay misiones guardadas. Ejecuta una simulación para comenzar.";
+  }
+  const CSV_FIELDS=["fecha","planeta","masa_seca_kg","combustible_inicial_kg","empuje_n","consumo_kg_s","angulo_grados","arrastre_cd","area_m2","altura_maxima_km","tiempo_s","velocidad_final_km_s","combustible_restante_kg","resultado"];
+  function exportCSV(){
+    try{const rows=getHistory();if(!rows.length){notify("No hay misiones para exportar.");return;}const quote=value=>`"${String(value??"").replace(/"/g,'""')}"`,csv="\uFEFF"+[CSV_FIELDS.map(quote).join(","),...rows.map(row=>CSV_FIELDS.map(field=>quote(row[field])).join(","))].join("\r\n");
+      const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download="misiones_cohete.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    }catch(error){notify("No se pudo exportar el historial: "+error.message);}
+  }
+  function audioContext(){if(state.muted)return null;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;state.audio=state.audio||new C();if(state.audio.state==="suspended")state.audio.resume();return state.audio;}catch(error){$("audio-flight-status").textContent="Audio no disponible: "+error.message;return null;}}
+  function tone(ctx,freq,duration,offset=0,type="sine",gain=.04,endFreq=freq){
+    const osc=ctx.createOscillator(),vol=ctx.createGain(),now=ctx.currentTime+offset;osc.type=type;osc.frequency.setValueAtTime(freq,now);osc.frequency.linearRampToValueAtTime(endFreq,now+duration);vol.gain.setValueAtTime(.0001,now);vol.gain.exponentialRampToValueAtTime(gain,now+.03);vol.gain.exponentialRampToValueAtTime(.0001,now+duration);osc.connect(vol);vol.connect(ctx.destination);osc.start(now);osc.stop(now+duration+.02);
+  }
+  function playSound(kind){if(kind==="launch")stopMotor();const ctx=audioContext();if(!ctx)return;if(kind==="launch"){tone(ctx,90,.8,0,"sawtooth",.025,45);tone(ctx,440,.22,.05,"sine",.025,880);state.motorTimer=setTimeout(()=>{if(state.flight&&!state.paused&&!state.finished)startMotor();},480);}else if(kind==="motor"){startMotor();}else if(kind==="click"){tone(ctx,520,.055,0,"sine",.025,360);}else if(kind==="hover"){tone(ctx,880,.065,0,"sine",.015,1180);}else if(kind==="celebration"){[523,659,784,1047].forEach((n,i)=>tone(ctx,n,.18,i*.18,"sine",.04));}else if(kind==="explosion"){tone(ctx,100,.8,0,"sawtooth",.07,30);tone(ctx,68,.65,.05,"triangle",.04,30);}}
+  function startMotor(){
+    const ctx=audioContext();if(!ctx||state.motorNodes)return;
+    const oscillators=[ctx.createOscillator(),ctx.createOscillator()],gains=[ctx.createGain(),ctx.createGain()];
+    oscillators.forEach((osc,i)=>{osc.type=i?"sine":"sawtooth";osc.frequency.value=i?116:58;gains[i].gain.value=i?.006:.012;osc.connect(gains[i]);gains[i].connect(ctx.destination);osc.start();});
+    state.motorNodes={oscillators,gains};
+  }
+  function stopMotor(){
+    clearTimeout(state.motorTimer);state.motorTimer=0;
+    if(!state.motorNodes)return;
+    const nodes=state.motorNodes;state.motorNodes=null;
+    nodes.gains.forEach(gain=>{gain.gain.cancelScheduledValues(state.audio.currentTime);gain.gain.setTargetAtTime(.0001,state.audio.currentTime,.015);});
+    nodes.oscillators.forEach(osc=>osc.stop(state.audio.currentTime+.08));
+  }
+  function setConfig(){showPage("config");}
+  $("start-button").addEventListener("click",setConfig);$("back-home").addEventListener("click",()=>showPage("home"));
+  $("launch-button").addEventListener("click",startFlight);$("planet").addEventListener("change",()=> $("custom-fields").classList.toggle("hidden",$("planet").value!=="Personalizado"));
+  $("open-history").addEventListener("click",()=>{ $("history-note").textContent="";renderHistory();showPage("history");});
+  $("history-back").addEventListener("click",setConfig);$("export-button").addEventListener("click",exportCSV);
+  $("pause-button").addEventListener("click",pauseToggle);$("reset-button").addEventListener("click",resetFlight);$("configure-button").addEventListener("click",()=>{cancelAnimationFrame(state.raf);stopMotor();state.flight=null;showPage("config");});
+  $("speed").addEventListener("input",()=>{$("speed-value").textContent=Number($("speed").value).toFixed(1)+"×";});
+  $("zoom").addEventListener("input",()=>{$("zoom-value").textContent=Number($("zoom").value).toFixed(1)+"×";renderFlight();});
+  $("mute-button").addEventListener("click",()=>{state.muted=!state.muted;$("mute-button").textContent=state.muted?"ACTIVAR AUDIO":"SILENCIAR AUDIO";$("audio-flight-status").textContent=state.muted?"Audio silenciado":"Audio activo";if(state.muted)stopMotor();else if(state.flight&&!state.paused&&!state.finished)startMotor();});
+  document.addEventListener("click",event=>{if(event.target.closest("button"))playSound("click");});
+  document.addEventListener("pointerover",event=>{if(event.target.closest("button")&&!state.motorNodes&&performance.now()-state.lastHover>120){state.lastHover=performance.now();playSound("hover");}});
+  window.addEventListener("keydown",event=>{if(state.page==="flight"){if(event.code==="Space"){event.preventDefault();pauseToggle();}else if(event.key.toLowerCase()==="r")resetFlight();else if(event.key.toLowerCase()==="q"){$("configure-button").click();}}else if(state.page==="home"&&event.key==="Enter")setConfig();else if(state.page==="config"&&event.key==="Enter"&&!event.target.matches("button,select"))startFlight();});
+  window.addEventListener("resize",()=>{resizeCanvases();if(state.page==="home")drawCover();else if(state.page==="flight")renderFlight();});
+  $("planet").dispatchEvent(new Event("change"));showPage("home");
+})();
+</script>
+</body>
+</html>
